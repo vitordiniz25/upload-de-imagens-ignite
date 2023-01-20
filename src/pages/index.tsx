@@ -10,7 +10,7 @@ import { Error } from '../components/Error';
 
 interface Image {
   title: string;
-  descripition: string;
+  description: string;
   url: string;
   ts: number;
   id: string;
@@ -28,7 +28,6 @@ export default function Home(): JSX.Element {
         after: pageParam,
       },
     });
-
     return data;
   }
 
@@ -39,20 +38,14 @@ export default function Home(): JSX.Element {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
-  } = useInfiniteQuery(
-    'images',
-    fetchImages,
-    {
-      getNextPageParam: lastPage => lastPage?.after || null,
-    }
-    // TODO GET AND RETURN NEXT PAGE PARAM
-  );
+  } = useInfiniteQuery('images', fetchImages, {
+    getNextPageParam: lastPage => lastPage?.after || null,
+  });
 
   const formattedData = useMemo(() => {
     const formatted = data?.pages.flatMap(imageData => {
-      imageData.data.flat();
+      return imageData.data.flat();
     });
-
     return formatted;
   }, [data]);
 
@@ -68,15 +61,12 @@ export default function Home(): JSX.Element {
     <>
       <Header />
 
-      <Box maxW={1120} px={20} mx="auto" my={20}>
+      <Box maxW={1120} px={[10, 15, 20]} mx="auto" my={[10, 15, 20]}>
         <CardList cards={formattedData} />
+
         {hasNextPage && (
-          <Button
-            onClick={() => fetchNextPage()}
-            disabled={isFetchingNextPage}
-            mt="6"
-          >
-            {isFetchingNextPage} ? 'Carregando...' : 'Carregar mais'
+          <Button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
+            {isFetchingNextPage ? 'Carregando...' : 'Carregar mais'}
           </Button>
         )}
       </Box>

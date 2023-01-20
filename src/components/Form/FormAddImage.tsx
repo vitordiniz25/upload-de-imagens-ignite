@@ -14,7 +14,7 @@ interface FormAddImageProps {
 interface NewImageData {
   url: string;
   title: string;
-  descripition: string;
+  description: string;
 }
 
 export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
@@ -59,7 +59,7 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
   const queryClient = useQueryClient();
   const mutation = useMutation(
     async (image: NewImageData) => {
-      await api.post('api/images', {
+      await api.post('/api/images', {
         ...image,
         url: imageUrl,
       });
@@ -88,18 +88,21 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
       }
       await mutation.mutateAsync(data);
       toast({
-        status: 'success',
         title: 'Imagem cadastrada',
         description: 'Sua imagem foi cadastrada com sucesso.',
+        status: 'success',
       });
     } catch {
       toast({
-        status: 'error',
         title: 'Falha no cadastro',
-        description: 'Ocorreu um erro ao tentar cadastrar a sua imagem',
+        description: 'Ocorreu um erro ao tentar cadastrar a sua imagem.',
+        status: 'error',
       });
     } finally {
-      reset(), setImageUrl(''), setLocalImageUrl(''), closeModal();
+      reset();
+      setImageUrl('');
+      setLocalImageUrl('');
+      closeModal();
     }
   };
 
